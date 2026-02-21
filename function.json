@@ -1,0 +1,96 @@
+{
+  "type": "vector.function",
+  "output_length": {
+    "$starlark": "len(input)"
+  },
+  "input_split": {
+    "$starlark": "[[item] for item in input]"
+  },
+  "input_merge": {
+    "$starlark": "[item for sublist in input for item in sublist]"
+  },
+  "input_schema": {
+    "type": "array",
+    "description": "A collection of cat images to rank by witnessing quality — the degree to which each image feels discovered and caught rather than deliberately produced.",
+    "minItems": 2,
+    "items": {
+      "type": "image",
+      "description": "A cat image to evaluate for spontaneity, impermanence, and generosity."
+    }
+  },
+  "tasks": [
+    {
+      "type": "vector.completion",
+      "skip": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Send me a cat photo that looks completely unplanned and unstaged. I want to see a real moment in a real room — imperfect framing, natural lighting, the everyday clutter of someone's actual home. The cat should have no idea it's being photographed. Nothing arranged, nothing optimized, just the raw evidence that someone noticed something and grabbed their phone."
+            }
+          ]
+        }
+      ],
+      "responses": {
+        "$starlark": "[[item] for item in input]"
+      },
+      "output": {
+        "$jmespath": "output.scores"
+      }
+    },
+    {
+      "type": "vector.completion",
+      "skip": null,
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Send me a cat photo that captures something that lasted less than a second — a mid-leap, a yawn at full stretch, the instant before something falls, a blink-and-you-miss-it expression. I want to feel the electricity of perfect timing, like this moment would have vanished without a trace if the photographer had hesitated for even a heartbeat."
+            }
+          ]
+        }
+      ],
+      "responses": {
+        "$starlark": "[[item] for item in input]"
+      },
+      "output": {
+        "$jmespath": "output.scores"
+      }
+    },
+    {
+      "type": "vector.completion",
+      "skip": null,
+      "messages": [
+        {
+          "role": "system",
+          "content": [
+            {
+              "type": "text",
+              "text": "You are someone who shares cat photos from your everyday life. You share moments not to impress anyone, but because they delighted you and you want others to feel that delight too. You never curate, polish, or brand your photos. You just share what you see — rough, honest, and full of warmth. Your photos say \"look what I was lucky enough to see\" rather than \"look what I made.\""
+            }
+          ]
+        },
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": "Show me a cat photo from your day. Something that made you smile and you just had to share."
+            }
+          ]
+        }
+      ],
+      "responses": {
+        "$starlark": "[[item] for item in input]"
+      },
+      "output": {
+        "$jmespath": "output.scores"
+      }
+    }
+  ],
+  "description": "Ranks cat images by witnessing quality — whether each feels discovered and caught rather than staged. Evaluates spontaneity (unplanned, real-life texture), impermanence (fleeting, unrepeatable timing), and generosity (shared as a gift, not a performance). Surfaces images that say \"look what I saw\" over \"look what I made.\""
+}
